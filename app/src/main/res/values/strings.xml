@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">CountryApp</string>
+    <string name="press_the_mic">Press the mic</string>
+    <string name="back">Back</string>
+    <string name="button_for_speech_recognition">button for speech recognition</string>
+    <string name="description">Description</string>
+    <string name="value">Value</string>
+    <string name="speech_recognition">Speech recognition</string>
+    <string name="country_here">Country here...</string>
+    <string name="search">Search</string>
+</resources>
