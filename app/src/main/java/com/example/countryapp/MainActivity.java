@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(Bundle outState) {                  //tietojen tallentaminen kännykän kääntämisen varalta
         // talleta tänne kaikki aktiviteetin data (tietojäsenet), jos tarpeen
         outState.putSerializable("STATE_DATA", (Serializable) countryDataItemHashMap);
         outState.putString("EDIT_TEXT", mCountryEditText.getText().toString());
@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onRestoreInstanceState(Bundle savedInstanceState) {
+    public void onRestoreInstanceState(Bundle savedInstanceState) {     //tietojen palauttaminen kännykän kääntämisen varalta
         countryDataItemHashMap = (ArrayList<HashMap<String,String>>) savedInstanceState.getSerializable("STATE_DATA");
         mCountryEditText.setText(savedInstanceState.getString("EDIT_TEXT"));
 
@@ -103,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
     private void parseJson(String jsonResponse){
         //kaivetaan data JSON responsesta
         try {
+
             countryDataItemArrayList.clear();
 
             JSONArray countryArray = new JSONArray(jsonResponse);
@@ -117,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
             countryDataItemArrayList.add(new CountryDataItem("Region", region));
             String currency = main.getJSONArray("currencies").getJSONObject(0).getString("name");
             countryDataItemArrayList.add(new CountryDataItem("Currency", currency));
-
+            //päivitetään UI
             updateUI();
         } catch (JSONException e) {
             e.printStackTrace();
@@ -126,14 +127,16 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void updateUI(){
+        //poistetaan vanhan haun data
         countryDataItemHashMap.clear();
+        //siirretään data HashMappeihin, jotka listataan yhteen lopuksi
         for (CountryDataItem i : countryDataItemArrayList){
             HashMap<String, String> countryDataHashItem = new HashMap<>();
             countryDataHashItem.put("description", i.mDescription);
             countryDataHashItem.put("value", i.mValue);
             countryDataItemHashMap.add(countryDataHashItem);
         }
-
+        //käytetään tehtyä listaa listanäytön luomiseen SimpleAdapterin avulla
         simpleAdapter = new SimpleAdapter(this, countryDataItemHashMap,
                 R.layout.country_list_item_layout,
                 new String[] {"description", "value"},

@@ -50,7 +50,7 @@ public class SpeechToTextActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(Bundle outState) {                  //tietojen tallentaminen kännykän kääntämisen varalta
         // talleta tänne kaikki aktiviteetin data (tietojäsenet), jos tarpeen
         outState.putSerializable("STATE_DATA", (Serializable) countryDataItemHashMap);
         outState.putString("TEXT_VIEW", mMicTextView.getText().toString());
@@ -59,7 +59,7 @@ public class SpeechToTextActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onRestoreInstanceState(Bundle savedInstanceState) {
+    public void onRestoreInstanceState(Bundle savedInstanceState) {     //tietojen palauttaminen kännykän kääntämisen varalta
         countryDataItemHashMap = (ArrayList<HashMap<String,String>>) savedInstanceState.getSerializable("STATE_DATA");
         mMicTextView.setText(savedInstanceState.getString("TEXT_VIEW"));
 
@@ -112,7 +112,7 @@ public class SpeechToTextActivity extends AppCompatActivity {
             countryDataItemArrayList.add(new CountryDataItem("Region", region));
             String currency = main.getJSONArray("currencies").getJSONObject(0).getString("name");
             countryDataItemArrayList.add(new CountryDataItem("Currency", currency));
-
+            //päivitetään UI
             updateUI();
         } catch (JSONException e) {
             e.printStackTrace();
@@ -121,14 +121,16 @@ public class SpeechToTextActivity extends AppCompatActivity {
 
 
     private void updateUI(){
+        //poistetaan vanhan haun data
         countryDataItemHashMap.clear();
+        //siirretään data HashMappeihin, jotka listataan yhteen lopuksi
         for (CountryDataItem i : countryDataItemArrayList){
             HashMap<String, String> countryDataHashItem = new HashMap<>();
             countryDataHashItem.put("description", i.mDescription);
             countryDataHashItem.put("value", i.mValue);
             countryDataItemHashMap.add(countryDataHashItem);
         }
-
+        //käytetään tehtyä listaa listanäytön luomiseen SimpleAdapterin avulla
         simpleAdapter = new SimpleAdapter(this, countryDataItemHashMap,
                 R.layout.country_list_item_layout,
                 new String[] {"description", "value"},
@@ -139,7 +141,7 @@ public class SpeechToTextActivity extends AppCompatActivity {
         countryListView.setAdapter(simpleAdapter);
     }
 
-    public void speak(View view) {
+    public void speak(View view) {  //metodi puheen tallentamisen palvelulle
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
                 RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
@@ -155,7 +157,7 @@ public class SpeechToTextActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {   //puheen tallentaminen ohjelman käyttöön
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode){
             case REQUEST_CODE_SPEECH_INPUT:{
